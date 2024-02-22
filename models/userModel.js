@@ -48,5 +48,18 @@ userSchema.pre('save', async function (next){
     next()
 })
 
+userSchema.methods.correctPassword = async (candidatePassword, userPassword) => {
+    return await bcryptjs.compare(candidatePassword, userPassword)
+}
+
+userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
+    if(this.passwordChangedAt){
+        const changedTimeStamp = parseInt(
+            this.passwordChangedAt.getTime() / 1000,10
+        )
+        return JWTTimeStamp < changedTimeStamp
+    }
+}
+
 const User = mongoose.model("User", userSchema);
 module.exports = User
