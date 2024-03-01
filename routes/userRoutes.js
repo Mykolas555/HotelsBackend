@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('./../controllers/authController')
+const authController = require('./../controllers/authController');
+const userContorller = require('../controllers/userController')
 
-router.post('/signup', authController.signup)
-router.post('/login', authController.login)
+
+router.get('/users', authController.protect, authController.restrictTo('admin'), userContorller.getUsers);
+router.get('/users/:id', authController.protect, authController.restrictTo('admin'), userContorller.getUser);
+router.post('/users/signup', authController.signup)
+router.post('/users/login', authController.login)
 
 module.exports = router

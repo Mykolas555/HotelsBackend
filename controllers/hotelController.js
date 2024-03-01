@@ -1,4 +1,3 @@
-const fs = require('fs')
 const Hotel = require('./../models/hotelModel')
 const APIFeatures = require('./../utils/apiTools')
 
@@ -27,13 +26,14 @@ exports.getAllHotels = async (req, res)=>{
         .limitFields()
         .paginate()
         const hotels = await hotelsData.query;
-        res.status(200).json({
+        return res.status(200).json({
             status: "success",
             results: hotels.length,
             data: {hotels}
         })
     }catch(err){
-        res.status(404).json({
+        console.error(err);
+        return res.status(404).json({
             status: "failed",
             message: err.message
         })
@@ -58,7 +58,11 @@ exports.createHotel = async (req, res) =>{
 
 exports.getHotel = async (req, res)=>{
     try{
-        const hotel = await Hotel.findById(req.params.id)
+        //const hotel = await Hotel.findById(req.params.id).populate('managers') //populate grazina visa managers o ne tik id
+        const hotel = await Hotel.findById(req.params.id).populate({
+            path: 'managers',
+            select: '-__v'
+        }).populate('reviews')
         res.status(200).json({
             status: "success",
             data: {hotel}

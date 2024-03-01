@@ -11,6 +11,7 @@ exports.signup =  async (req, res) => {
         const newUser = await User.create({
             name: req.body.name,
             email: req.body.email,
+            role: req.body.role,
             password: req.body.password,
             passwordConfirm: req.body.passwordConfirm
         })
@@ -86,9 +87,21 @@ exports.protect = async (req, res, next) => {
         req.user = currentUser
     }catch(err){
         res.status(400).json({
-            status:'failed',
+            status:'failed in p',
             error: err.message
         })
     }
     next()
+}
+
+exports.restrictTo = (...roles) => {
+    return (req, res, next) => {
+        if(!roles.includes(req.user.role)){
+            res.status(403).json({
+                status: 'failed role',
+                message: 'dont have permission to this action'
+            })
+        }
+        next()
+    }
 }
