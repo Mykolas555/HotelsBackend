@@ -87,7 +87,7 @@ exports.protect = async (req, res, next) => {
         req.user = currentUser
     }catch(err){
         res.status(400).json({
-            status:'failed in p',
+            status:'failed in protection ',
             error: err.message
         })
     }

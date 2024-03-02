@@ -25,7 +25,7 @@ const hotelSchema = new mongoose.Schema({
         type:Number
     },
     comfort:{
-        type:String,
+        type: String,
         required:[true, 'a hotel must have  confort level'],
         enum:{
             values:["1", "2", "3", "4", "5", "6", "7"]
